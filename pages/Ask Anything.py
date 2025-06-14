@@ -25,7 +25,7 @@ if not filtered.empty:
     st.subheader("📊 Player Stats")
     st.dataframe(player_data, use_container_width=True)
 
-    # 🧠 TheSportsDB API fetch
+    # TheSportsDB API
     api_key = st.secrets["SPORTSDB_API_KEY"]
     player_name_clean = selected_name.replace(" ", "%20")
     player_url = f"https://www.thesportsdb.com/api/v1/json/{api_key}/searchplayers.php?p={player_name_clean}"
@@ -35,13 +35,11 @@ if not filtered.empty:
         p = player_resp["player"][0]
         pid = p.get("idPlayer")
 
-        # 🔹 Player Info
+        # Player Profile
         st.subheader(f"📖 {p.get('strPlayer')} Profile")
-
         col1, col2 = st.columns([1, 2])
         if p.get("strCutout") or p.get("strThumb"):
             col1.image(p.get("strCutout") or p.get("strThumb"), width=200)
-
         col2.markdown(f"""
         - **Team:** {p.get('strTeam', '—')}
         - **Nationality:** {p.get('strNationality', '—')}
@@ -51,14 +49,9 @@ if not filtered.empty:
         - **Height:** {p.get('strHeight', '—')}  
         - **Weight:** {p.get('strWeight', '—')}
         """)
+        st.write(p.get("strDescriptionEN", "No bio available."))
 
-        # 🔹 Bio
-        if p.get("strDescriptionEN"):
-            st.write(p["strDescriptionEN"])
-        else:
-            st.write("No bio available.")
-
-        # 🔹 Social
+        # Social Links
         socials = []
         for k, icon in [("strTwitter", "🐦"), ("strInstagram", "📸"), ("strFacebook", "📘")]:
             if p.get(k):
@@ -66,7 +59,7 @@ if not filtered.empty:
         if socials:
             st.markdown(" ".join(socials))
 
-        # 🔹 Team info
+        # Club Info
         if p.get("strTeam"):
             team_url = f"https://www.thesportsdb.com/api/v1/json/{api_key}/searchteams.php?t={p['strTeam'].replace(' ', '%20')}"
             team_resp = requests.get(team_url).json()
@@ -81,7 +74,7 @@ if not filtered.empty:
                 if team.get("strTeamBadge"):
                     st.image(team["strTeamBadge"], width=100)
 
-        # 🔹 Former Teams (safe key access)
+        # Former Teams
         former_url = f"https://www.thesportsdb.com/api/v1/json/{api_key}/lookupformerteams.php?id={pid}"
         former_resp = requests.get(former_url).json()
         if former_resp.get("formerteams"):
@@ -89,18 +82,23 @@ if not filtered.empty:
             former_teams = [t.get("strTeam") or t.get("strFormerTeam") or "Unknown Team" for t in former_resp["formerteams"]]
             st.write(", ".join(former_teams))
 
-        # 🔹 Honors
+        # Honors with safe JSON decode
         honors_url = f"https://www.thesportsdb.com/api/v1/json/{api_key}/lookupplayerhonours.php?id={pid}"
-        honors_resp = requests.get(honors_url).json()
-        if honors_resp.get("honours"):
-            st.subheader("🏆 Honors")
-            honors = [f"{h['strHonour']} ({h['strSeason']})" for h in honors_resp["honours"]]
-            st.write(", ".join(honors))
+        try:
+            honors_resp = requests.get(honors_url)
+            if honors_resp.status_code == 200 and honors_resp.text.strip():
+                honors_data = honors_resp.json()
+                if honors_data.get("honours"):
+                    st.subheader("🏆 Honors")
+                    honors = [f"{h['strHonour']} ({h['strSeason']})" for h in honors_data["honours"]]
+                    st.write(", ".join(honors))
+        except Exception as e:
+            st.warning(f"Could not fetch honors: {e}")
 
     else:
         st.warning("Could not find player info in TheSportsDB.")
 
-    # 🔹 Key Stats from CSV
+    # Key Stats from your CSV
     st.subheader("⚡ Key Stats")
     col1, col2, col3 = st.columns(3)
     col1.metric("Goals", int(player_data.Goals.values[0]))
