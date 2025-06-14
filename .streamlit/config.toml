@@ -1,0 +1,12 @@
+[theme]
+base = "light"
+
+[server]
+headless = true
+
+[client]
+showSidebarNavigation = true
+toolbarMode = "minimal"
+
+[pages]
+order = ["Home", "Top Performers", "Player Compare", "Ask Anything"]
