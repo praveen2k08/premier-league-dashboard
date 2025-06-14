@@ -3,8 +3,8 @@ import pandas as pd
 
 st.set_page_config(page_title="🏠 EPL Dashboard", layout="wide")
 
-st.markdown("<h1 style='text-align: center;'>⚽ Hi, Welcome to Premier League 2024/25 Dashboard</h1>", unsafe_allow_html=True)
-st.markdown("### 📊 Built with Python + Streamlit")
+st.markdown("<h1 style='text-align: center;'>⚽ Hi, Welcome to Premier League 2024/25 </h1>", unsafe_allow_html=True)
+#st.markdown("### 📊 Built with Python + Streamlit")
 
 # Optional Image Banner
 st.image("pl_logo.png", width=150)
