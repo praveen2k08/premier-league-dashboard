@@ -81,12 +81,12 @@ if not filtered.empty:
                 if team.get("strTeamBadge"):
                     st.image(team["strTeamBadge"], width=100)
 
-        # 🔹 Former Teams
+        # 🔹 Former Teams (safe key access)
         former_url = f"https://www.thesportsdb.com/api/v1/json/{api_key}/lookupformerteams.php?id={pid}"
         former_resp = requests.get(former_url).json()
         if former_resp.get("formerteams"):
             st.subheader("📋 Former Teams")
-            former_teams = [t["strTeam"] for t in former_resp["formerteams"]]
+            former_teams = [t.get("strTeam") or t.get("strFormerTeam") or "Unknown Team" for t in former_resp["formerteams"]]
             st.write(", ".join(former_teams))
 
         # 🔹 Honors
