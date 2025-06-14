@@ -1,30 +1,42 @@
 import streamlit as st
 import pandas as pd
+import wikipedia
 
-# Page settings
-st.set_page_config(page_title="Ask About Any Player", page_icon="🔍")
+# Page config
+st.set_page_config(page_title="Ask About Any Player", page_icon="🧠")
 
-# Title
-st.title("🔍 Ask About Any Premier League Player")
+st.title("🧠 Ask About Any Premier League Player")
 
-# Load the dataset
 @st.cache_data
 def load_data():
-    df = pd.read_csv("epl_player_stats_24_25.csv")
-    return df
+    return pd.read_csv("epl_player_stats_24_25.csv")
 
 df = load_data()
 
-# Search box
-player_query = st.text_input("Enter a player name (e.g., Haaland, Saka, Rice)")
+# Input
+player_query = st.text_input("Enter a player name:")
 
-# Search logic
 if player_query:
     player_query_lower = player_query.lower()
-    result = df[df["Player Name"].str.lower().str.contains(player_query_lower)]
+    player_data = df[df["Player Name"].str.lower().str.contains(player_query_lower)]
 
-    if not result.empty:
-        st.success(f"Found {len(result)} player(s) matching '{player_query}':")
-        st.dataframe(result, use_container_width=True)
+    if not player_data.empty:
+        # Show player stats
+        st.subheader("📊 Player Stats")
+        st.dataframe(player_data, use_container_width=True)
+
+        # Get the first matching name for Wikipedia
+        try:
+            wiki_summary = wikipedia.summary(player_query, sentences=2)
+            page = wikipedia.page(player_query, auto_suggest=False)
+            image_url = page.images[0] if page.images else None
+
+            st.subheader("📖 Wikipedia Bio")
+            st.write(wiki_summary)
+
+            if image_url:
+                st.image(image_url, width=250, caption=player_query)
+        except Exception as e:
+            st.warning("Wikipedia info not found or unclear name. Try full name.")
     else:
-        st.error(f"No players found matching '{player_query}'. Try a different name.")
+        st.error("Player not found in dataset. Try a different name.")
