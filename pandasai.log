@@ -1,0 +1,8 @@
+2025-06-14 17:14:41 [INFO] Question: who is the top scorer this season
+2025-06-14 17:14:41 [INFO] Running PandasAI with openai LLM...
+2025-06-14 17:14:41 [INFO] Prompt ID: 25112973-8ee2-44e7-a147-7c335cdb0c20
+2025-06-14 17:14:41 [INFO] Executing Pipeline: GenerateChatPipeline
+2025-06-14 17:14:41 [INFO] Executing Step 0: ValidatePipelineInput
+2025-06-14 17:14:41 [INFO] Executing Step 1: CacheLookup
+2025-06-14 17:14:41 [INFO] Executing Step 2: PromptGeneration
+2025-06-14 17:14:41 [ERROR] Pipeline failed on step 2: 'Index' object has no attribute '_format_native_types'
