@@ -1,7 +1,3 @@
 streamlit
 pandas
-openai
-langchain
-langchain_openai
-langchain-experimental
 pandasai
