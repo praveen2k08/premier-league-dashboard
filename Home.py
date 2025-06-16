@@ -34,4 +34,4 @@ st.subheader("👀 Sample of the Dataset")
 st.dataframe(df.head())
 
 st.markdown("---")
-st.markdown("<small>Made with ❤️ using Streamlit by Pravv</small>", unsafe_allow_html=True)
+st.markdown("<small>Made with ❤️ using Streamlit by Praveen</small>", unsafe_allow_html=True)
