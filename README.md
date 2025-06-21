@@ -2,6 +2,8 @@
 
 A visually engaging and interactive Streamlit web app that allows users to explore English Premier League 24/25 player statistics. Features include:
 
+Doing it for learning and fun
+
 - Top performer insights (goals, assists, minutes, etc.)
 - Player comparison
 - AI-powered "Ask Anything" page using LLMs
